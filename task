@@ -1,0 +1,136 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ConsoleApp9
+{
+    class Department
+    {
+        public Department(string name,int employeeLimit)
+        {
+            Name = name;
+            EmployeeLimit = employeeLimit;
+        }
+        private int _empployeeLimit;
+        public string Name { get; set; }
+        public int EmployeeLimit
+        {
+            get => _empployeeLimit;
+            set
+            {
+                if (value > 0)
+                    _empployeeLimit = value;
+            }
+        }
+        public Employee[] employees = new Employee[0];
+        public Employee this[int index]
+        {
+            get => employees[index];
+            set
+            {
+                employees[index] = value;
+            }
+        }
+        public void AddEmployee(Employee employee)
+        {
+            if (employees.Length+1 <= EmployeeLimit)
+            {
+                Array.Resize(ref employees, employees.Length + 1);
+                employees[employees.Length - 1] = employee;
+            }
+            else
+                throw new CapacityLimitException($"Siz isci limiti asmisiz,max-{EmployeeLimit} isci ola biler");
+        }
+    }
+
+}
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ConsoleApp9
+{
+    class Employee : IPerson
+    {
+        public Employee(string name,int age, double salary)
+        {
+            Id = ++_id;
+            Name = name;
+            Salary = salary;
+            Age = age;
+        }
+        private int _age;
+        private int _id;
+        private double _salary;
+        public double Salary
+        {
+            get => _salary;
+            set
+            {
+                if (value > 0)
+                    _salary = value;
+            }
+        }
+        public int Id { get; }
+        public string Name { get; set; }
+        public int Age
+        {
+            get => _age;
+            set
+            {
+                if (value > 0)
+                    _age = value;
+            }
+        }
+
+
+        public string ShowInfo()
+        {
+            return $"\nName : {Name}\nAge : {Age}\n";
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ConsoleApp9
+{
+    interface IPerson
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
+
+        public string ShowInfo();
+
+    }
+}
+using System;
+
+namespace ConsoleApp9
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Employee employee1 = new Employee("Ferid", 21, 600);
+            Employee employee2 = new Employee("Sakir", 34, 1200);
+            Employee employee3 = new Employee("Hesen", 27, 4322);
+            Employee employee4 = new Employee("Tural", 41, 543);
+            Employee employee5 = new Employee("Qasim", 41, 543);
+
+
+            Department department = new Department("Code Academy",1);
+            department.AddEmployee(employee1);
+            department.AddEmployee(employee2);
+            //department.AddEmployee(employee3);
+            //department.AddEmployee(employee4);
+            //department.AddEmployee(employee5);
+            foreach (var item in department.employees)
+            {
+                Console.WriteLine(item.ShowInfo());
+            }
+            Console.WriteLine(department[2].ShowInfo());
+        }
+    }
+}
